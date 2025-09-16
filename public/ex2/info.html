@@ -23,10 +23,64 @@
 
         </div>
         <script>
-            function getData() {
- 
-            }
+async function getData(){
+        try{
+            //issue GET request to /data
+            const response = await axios.get("/data", {
+                "params" : {
+                    "type": document.getElementById('type').value,
+                    "limit": document.getElementById('limit').value
+                }
+            })
 
+            generateTable(response.data);
+        } catch(error){
+            console.log('error');
+        }
+    }
+
+    function generateTable(dataObj){
+        const resultDivElem = document.getElementById('result');
+
+        while(resultDivElem.firstChild){
+            resultDivElem.firstChild.remove();
+        }
+
+        const h2Elem = document.createElement('h2');
+        heElem.innerText = dataObj['type'];
+        resultDivElem.append(h2Elem);
+        
+        let tableElem = document.createElement('table');
+        tableElem.className = "table"; // give it a className for it to be named as a bootstrap table 
+        const tBodyElem = document.createElement('tbody');
+        let trElem = document.createElement('tr');
+        const tbHeadingLabels = Object.keys(dataObj['records'][0]) //return just the keys of the json object
+
+        for(let headingLabel of tbHeadingLabels){
+            let thElem = document.createElement('th');
+            thElem.innerText=headingLabel;
+            trElem.appendChild(thElem);
+        }
+        tBodyElem.appendChild(trElem);
+
+        
+        for(let i=0; i < dataObj['records'].length; i++){
+            const trElem = document.createElement("tr");
+            const tdElem = document.createElement("td");
+            let elem = dataObj['records'][i];
+            const elemVal = elem["tbHeadingLabels[i]"];
+            trElem.appendChild(tdElem);
+            tBodyElem.appendChild(trElem);
+
+
+        }
+        tableElem.appendChild(tBodyElem);
+        resultDivElem.appendChild(tableElem);
+        //need to retreive the table heading labels 
+        let thElem = document.createElement('th'); 
+        
+     
+    }
         </script>
 </body>
 </html>
